@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-// 8 QUESTIONS: Original 4 + New Commitment & Social Media Dimensions
 const questions = [
   {
     question: "When someone gives you 100% consistent, secure attention right away, what is your gut reaction?",
@@ -111,7 +110,6 @@ export default function QuizPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  
   const [loadingText, setLoadingText] = useState("Analyzing attachment patterns...");
   const [progress, setProgress] = useState(0);
 
@@ -142,136 +140,130 @@ export default function QuizPage() {
     for (const [archetype, score] of Object.entries(scores)) {
       if (score > maxScore) { maxScore = score; resultArchetype = archetype; }
     }
+    // THIS IS THE MAGIC LINE: It saves their result in the browser!
+    localStorage.setItem('userQuizResult', resultArchetype);
     return resultsData[resultArchetype];
   };
 
-  // --- 1. SUSPENSE LOADING SCREEN ---
+  // --- 1. SUSPENSE LOADING SCREEN (OPTIMIZED) ---
   if (isAnalyzing) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950">
-        <div className="max-w-md w-full text-center space-y-8">
-          <div className="relative w-24 h-24 mx-auto">
-            <div className="absolute inset-0 rounded-full border-4 border-zinc-800"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-t-purple-500 border-r-pink-500 border-b-transparent border-l-transparent animate-spin"></div>
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="w-16 h-16 mx-auto rounded-full border-4 border-zinc-800 border-t-purple-500 animate-spin" />
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-white">Processing Your Data</h2>
+            <p className="text-purple-400 text-sm">{loadingText}</p>
           </div>
-          <div className="space-y-3">
-            <h2 className="text-2xl font-bold text-white">Processing Your Data</h2>
-            <p className="text-purple-400 font-medium transition-all duration-300">{loadingText}</p>
+          <div className="w-full bg-zinc-800 rounded-full h-1.5">
+            <div className="bg-purple-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${progress}%` }} />
           </div>
-          <div className="w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
-          </div>
-          <p className="text-xs text-zinc-500 pt-4">This usually takes about 4 seconds. Please do not close this window.</p>
         </div>
       </main>
     );
   }
 
-  // --- 2. THE PAYWALL SCREEN (FIXED & COMPLETE) ---
+  // --- 2. PAYWALL SCREEN (OPTIMIZED) ---
   if (showPaywall) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950">
-        <div className="max-w-lg w-full text-center space-y-8 bg-zinc-900/80 border border-zinc-800 rounded-3xl p-8 md:p-10 backdrop-blur-md shadow-2xl">
-          
-          {/* Lock Icon */}
-          <div className="w-16 h-16 mx-auto bg-zinc-800 rounded-full flex items-center justify-center border border-zinc-700">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-zinc-950">
+        <div className="max-w-md w-full text-center space-y-6 bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div className="w-12 h-12 mx-auto rounded-full bg-zinc-800 flex items-center justify-center">
+            <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-
-          <div className="space-y-4">
-            <h2 className="text-3xl font-bold text-white">Your Profile is Ready.</h2>
-            <p className="text-zinc-400 text-lg">We've identified your core commitment blocker and generated your personalized psychological report.</p>
+          
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-white">Your Profile is Ready.</h2>
+            <p className="text-zinc-400 text-sm">We've identified your core commitment blocker.</p>
           </div>
 
-          <div className="text-left bg-zinc-950/50 border border-zinc-800 rounded-2xl p-6 space-y-3">
-            <p className="text-sm font-bold text-zinc-300 uppercase tracking-wider mb-2">What's inside your report:</p>
-            <div className="flex items-start space-x-3"><span className="text-green-400 mt-1">✓</span><p className="text-zinc-300 text-sm">Your exact Commitment Archetype & Core Wound</p></div>
-            <div className="flex items-start space-x-3"><span className="text-green-400 mt-1">✓</span><p className="text-zinc-300 text-sm">The 30-Day "Rewire" Action Plan to fix it</p></div>
-            <div className="flex items-start space-x-3"><span className="text-green-400 mt-1">✓</span><p className="text-zinc-300 text-sm">How to spot and attract secure partners</p></div>
+          <div className="text-left bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-2">
+            <p className="text-xs font-bold text-zinc-300 uppercase">What's inside:</p>
+            <div className="flex items-start space-x-2"><span className="text-green-400">✓</span><p className="text-zinc-300 text-xs">Your exact Commitment Archetype</p></div>
+            <div className="flex items-start space-x-2"><span className="text-green-400">✓</span><p className="text-zinc-300 text-xs">30-Day Rewire Action Plan</p></div>
+            <div className="flex items-start space-x-2"><span className="text-green-400">✓</span><p className="text-zinc-300 text-xs">How to attract secure partners</p></div>
           </div>
           
-          {/* Price & REAL PayPal Button */}
-          <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-center space-x-3">
-              <span className="text-zinc-500 line-through text-xl">$4.99</span>
-              <span className="text-3xl font-bold text-white">$0.90</span>
-              <span className="bg-purple-900/30 text-purple-300 text-xs font-bold px-2 py-1 rounded uppercase">One-time</span>
+          <div className="space-y-3">
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-zinc-500 line-through">$4.99</span>
+              <span className="text-2xl font-bold text-white">$0.90</span>
             </div>
             
             <a 
               href="https://www.paypal.com/ncp/payment/78SAVHWBR3FRG" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="block w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-lg rounded-full shadow-lg shadow-purple-900/30 transition-all duration-300 transform hover:scale-105 text-center cursor-pointer"
+              className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center"
             >
               Unlock My Full Report →
             </a>
-            <p className="text-[10px] text-zinc-500">Secure checkout via PayPal. Instant digital delivery.</p>
+            <p className="text-[10px] text-zinc-500">Secure checkout. Instant delivery.</p>
           </div>
         </div>
       </main>
     );
   }
 
-  // --- 3. FINAL RESULT SCREEN ---
+  // --- 3. RESULT SCREEN (OPTIMIZED) ---
   if (showResult) {
     const result = getFinalResult();
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950">
-        <div className="max-w-2xl w-full text-center space-y-8 bg-zinc-900/50 border border-zinc-800 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
-          <div className="inline-block px-4 py-1.5 bg-purple-900/30 border border-purple-700/50 rounded-full text-xs font-bold text-purple-300 uppercase tracking-wider">
-            Premium Report Unlocked
+      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-zinc-950">
+        <div className="max-w-md w-full text-center space-y-6 bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div className="px-3 py-1 bg-purple-900/30 border border-purple-700/50 rounded-full text-xs font-bold text-purple-300 uppercase">
+            Report Unlocked
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-white">
-            You are <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">{result.title}</span>
+          <h1 className="text-2xl md:text-3xl font-bold text-white">
+            You are <span className="text-purple-400">{result.title}</span>
           </h1>
           
-          <p className="text-lg text-zinc-300 leading-relaxed">
-            {result.description}
-          </p>
+          <p className="text-sm text-zinc-300 leading-relaxed">{result.description}</p>
 
-          <div className="pt-6 space-y-4">
-            <button className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-lg rounded-full shadow-lg shadow-purple-900/30 transition-all duration-300 transform hover:scale-105 cursor-pointer">
+          <div className="space-y-3 pt-4">
+            <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full">
               {result.cta} →
             </button>
-            <p className="text-xs text-zinc-500">
-              This is a premium digital guide designed to rewire your attachment patterns.
-            </p>
           </div>
 
-          <Link href="/" className="block text-sm text-zinc-500 hover:text-zinc-300 transition-colors mt-8">
-            ← Take the quiz again
-          </Link>
+          <Link href="/" className="block text-xs text-zinc-500">← Take the quiz again</Link>
         </div>
       </main>
     );
   }
 
-  // --- 4. QUIZ QUESTIONS SCREEN ---
+  // --- 4. QUIZ QUESTIONS (OPTIMIZED) ---
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950">
-      <div className="max-w-2xl w-full space-y-8">
-        <div className="w-full bg-zinc-800 rounded-full h-2">
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-zinc-950">
+      <div className="max-w-md w-full space-y-6">
+        <div className="w-full bg-zinc-800 rounded-full h-1.5">
+          <div className="bg-purple-500 h-1.5 rounded-full transition-all duration-500" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }} />
         </div>
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-3xl p-8 md:p-10 backdrop-blur-sm space-y-8">
+        
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-5">
           <div>
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Question {currentQuestion + 1} of {questions.length}</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mt-3 leading-snug">{questions[currentQuestion].question}</h2>
+            <span className="text-xs text-zinc-500 uppercase">Question {currentQuestion + 1} of {questions.length}</span>
+            <h2 className="text-lg font-bold text-white mt-2">{questions[currentQuestion].question}</h2>
           </div>
-          <div className="space-y-3">
+          
+          <div className="space-y-2">
             {questions[currentQuestion].options.map((option, index) => (
-              <button key={index} onClick={() => handleAnswer(option.archetype)} className="w-full text-left p-4 rounded-xl border border-zinc-700 bg-zinc-800/50 hover:bg-zinc-700 hover:border-purple-500/50 text-zinc-200 transition-all duration-200 group">
-                <span className="inline-block w-6 h-6 rounded-full border border-zinc-500 group-hover:border-purple-400 group-hover:bg-purple-400/20 mr-3 text-center text-sm leading-5 transition-colors">{String.fromCharCode(65 + index)}</span>
+              <button 
+                key={index} 
+                onClick={() => handleAnswer(option.archetype)} 
+                className="w-full text-left p-3 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-200 text-sm"
+              >
+                <span className="inline-block w-5 h-5 rounded-full border border-zinc-500 mr-2 text-center text-xs leading-4">{String.fromCharCode(65 + index)}</span>
                 {option.text}
               </button>
             ))}
           </div>
         </div>
-        <Link href="/" className="block text-center text-sm text-zinc-500 hover:text-zinc-300 transition-colors">← Back to home</Link>
+        
+        <Link href="/" className="block text-center text-xs text-zinc-500">← Back to home</Link>
       </div>
     </main>
   );
