@@ -3,18 +3,19 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-// REPLACE THESE WITH YOUR 4 GOOGLE DRIVE LINKS!
+// YOUR REAL GOOGLE DRIVE LINKS ARE NOW CONNECTED!
 const pdfLinks: Record<string, string> = {
-  "Avoidant Runner": "PASTE_AVOIDANT_RUNNER_DRIVE_LINK_HERE",
-  "Anxious Over-Analyzer": "PASTE_ANXIOUS_OVER_ANALYZER_DRIVE_LINK_HERE",
-  "Fantasy Addict": "PASTE_FANTASY_ADDICT_DRIVE_LINK_HERE",
-  "The Project Manager": "PASTE_PROJECT_MANAGER_DRIVE_LINK_HERE"
+  "Avoidant Runner": "https://drive.google.com/file/d/1ckl1QdhOLxY0kvC4UTMm67wSkq1EFO8E/view?usp=sharing",
+  "Anxious Over-Analyzer": "https://drive.google.com/file/d/1QkFNkMg-WOFLF37sgCJTd99KszmEkvKS/view?usp=sharing",
+  "Fantasy Addict": "https://drive.google.com/file/d/1mQKLDPtcLAeb5PYyKqpWnYo0LhooFGpE/view?usp=sharing",
+  "The Project Manager": "https://drive.google.com/file/d/1fUFhuHvmmmlJeSY2uF7L8j8KrZr9tr6u/view?usp=sharing"
 };
 
 export default function DownloadPage() {
   const [result, setResult] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check the browser's memory for their quiz result
     const savedResult = localStorage.getItem('userQuizResult');
     setResult(savedResult);
   }, []);
