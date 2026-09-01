@@ -115,9 +115,6 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [loadingText, setLoadingText] = useState("Analyzing attachment patterns...");
   const [progress, setProgress] = useState(0);
-  
-  // NEW: This holds the actual result so the test button can use it
-  const [finalArchetype, setFinalArchetype] = useState("");
 
   const handleAnswer = (archetype: string) => {
     const newScores = { ...scores, [archetype]: scores[archetype] + 1 };
@@ -126,7 +123,7 @@ export default function QuizPage() {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Calculate the result
+      // --- Calculate and save result IMMEDIATELY upon finishing ---
       let maxScore = 0;
       let resultArchetype = "Avoidant Runner";
       for (const [arch, score] of Object.entries(newScores)) {
@@ -136,9 +133,8 @@ export default function QuizPage() {
         }
       }
       
-      // Save to browser memory AND save it for the test button
+      // Save to browser memory RIGHT NOW before showing the paywall
       localStorage.setItem('userQuizResult', resultArchetype);
-      setFinalArchetype(resultArchetype);
       
       // Start the analyzing animation
       setIsAnalyzing(true);
@@ -220,14 +216,6 @@ export default function QuizPage() {
             </a>
             
             <p className="text-[10px] text-zinc-500">Secure checkout: M-Pesa, Card, or Bank Transfer.</p>
-
-            {/* FIXED TEST BUTTON: Now uses your actual quiz result! */}
-            <Link 
-              href={`/download?test=${encodeURIComponent(finalArchetype)}`} 
-              className="block text-[10px] text-zinc-600 mt-3 underline"
-            >
-              [Dev Test] Skip payment & test download ({finalArchetype})
-            </Link>
           </div>
         </div>
       </main>
