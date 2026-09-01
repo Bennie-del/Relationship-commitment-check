@@ -192,14 +192,21 @@ export default function QuizPage() {
               <span className="text-2xl font-bold text-white">$0.90</span>
             </div>
             
-            {/* UPDATED: Opens in the SAME tab so the redirect works perfectly */}
+            {/* MAIN PAYMENT BUTTON (Opens in same tab for proper redirect) */}
             <a 
               href="https://selar.co/71885987x8" 
               className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center hover:opacity-90 transition-opacity"
             >
               Unlock My Full Report →
             </a>
-            <p className="text-[10px] text-zinc-500">Secure checkout via M-Pesa or Card. Instant delivery.</p>
+            
+            {/* UPDATED TEXT TO SHOW MULTIPLE PAYMENT OPTIONS */}
+            <p className="text-[10px] text-zinc-500">Secure checkout: M-Pesa, Card, or Bank Transfer.</p>
+
+            {/* SECRET TEST BUTTON - DELETE THIS LINE LATER WHEN YOU GO LIVE */}
+            <Link href="/download" className="block text-[10px] text-zinc-600 mt-3 underline">
+              [Dev Test] Skip payment & test download
+            </Link>
           </div>
         </div>
       </main>
