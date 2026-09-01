@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-// YOUR REAL GOOGLE DRIVE LINKS
+// YOUR GOOGLE DRIVE LINKS
 const pdfLinks: Record<string, string> = {
   "Avoidant Runner": "https://drive.google.com/file/d/1ckl1QdhOLxY0kvC4UTMm67wSkq1EFO8E/view?usp=sharing",
   "Anxious Over-Analyzer": "https://drive.google.com/file/d/1QkFNkMg-WOFLF37sgCJTd99KszmEkvKS/view?usp=sharing",
@@ -13,60 +13,63 @@ const pdfLinks: Record<string, string> = {
 
 export default function DownloadPage() {
   const [result, setResult] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage immediately when component mounts
+    // Get the result from browser memory
     const savedResult = localStorage.getItem('userQuizResult');
-    console.log('Quiz result from storage:', savedResult); // For debugging
+    console.log('Found result:', savedResult);
     setResult(savedResult);
-    setIsLoading(false);
   }, []);
 
-  // Show loading state while checking
-  if (isLoading) {
-    return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white text-center">
-        <div className="w-12 h-12 rounded-full border-4 border-zinc-800 border-t-purple-500 animate-spin mb-4" />
-        <p className="text-zinc-400">Loading your report...</p>
-      </main>
-    );
-  }
-
+  // If no result found, show this
   if (!result) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white text-center">
-        <h1 className="text-2xl font-bold mb-4">No Report Found</h1>
-        <p className="text-zinc-400 mb-8">It looks like you haven't taken the quiz yet, or your browser memory was cleared.</p>
-        <Link href="/" className="px-6 py-3 bg-purple-600 rounded-full font-bold hover:bg-purple-500 transition">Take the Quiz First</Link>
+      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white">
+        <h1 className="text-3xl font-bold mb-4 text-center">No Report Found</h1>
+        <p className="text-zinc-400 mb-8 text-center max-w-md">
+          It looks like you haven't taken the quiz yet, or your browser memory was cleared.
+        </p>
+        <Link 
+          href="/" 
+          className="px-8 py-3 bg-purple-600 hover:bg-purple-500 rounded-full font-bold transition"
+        >
+          Take the Quiz First
+        </Link>
       </main>
     );
   }
 
+  // Result found - show download button
   const downloadLink = pdfLinks[result] || "#";
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white text-center">
-      <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-8 space-y-6">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white">
+      <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-8 text-center space-y-6">
         <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
           <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
         
-        <h1 className="text-2xl font-bold">Payment Successful!</h1>
-        <p className="text-zinc-400">Thank you for your purchase. Your personalized report for <span className="text-purple-400 font-bold">{result}</span> is ready.</p>
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Payment Successful!</h1>
+          <p className="text-zinc-400">
+            Your personalized report for <span className="text-purple-400 font-bold">{result}</span> is ready.
+          </p>
+        </div>
         
         <a 
           href={downloadLink} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="block w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-full shadow-lg transition-all"
+          className="block w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-full transition"
         >
           Download My PDF Report →
         </a>
         
-        <p className="text-xs text-zinc-500 pt-4">If the download doesn't start, check your pop-up blocker.</p>
+        <p className="text-xs text-zinc-500">
+          If the download doesn't start, check your pop-up blocker.
+        </p>
       </div>
     </main>
   );
