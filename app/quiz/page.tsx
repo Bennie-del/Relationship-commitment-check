@@ -104,7 +104,10 @@ const resultsData: Record<string, { title: string; description: string; cta: str
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState<Record<string, number>>({
-    "Avoidant Runner": 0, "Anxious Over-Analyzer": 0, "Fantasy Addict": 0, "The Project Manager": 0
+    "Avoidant Runner": 0, 
+    "Anxious Over-Analyzer": 0, 
+    "Fantasy Addict": 0, 
+    "The Project Manager": 0
   });
   
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -120,6 +123,20 @@ export default function QuizPage() {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
+      // --- THE FIX: Calculate and save result IMMEDIATELY upon finishing ---
+      let maxScore = 0;
+      let resultArchetype = "Avoidant Runner";
+      for (const [arch, score] of Object.entries(newScores)) {
+        if (score > maxScore) { 
+          maxScore = score; 
+          resultArchetype = arch; 
+        }
+      }
+      
+      // Save to browser memory RIGHT NOW before showing the paywall
+      localStorage.setItem('userQuizResult', resultArchetype);
+      
+      // Start the analyzing animation
       setIsAnalyzing(true);
       setProgress(10);
       setLoadingText("Analyzing attachment patterns...");
@@ -140,12 +157,10 @@ export default function QuizPage() {
     for (const [archetype, score] of Object.entries(scores)) {
       if (score > maxScore) { maxScore = score; resultArchetype = archetype; }
     }
-    // THIS IS THE MAGIC LINE: It saves their result in the browser!
-    localStorage.setItem('userQuizResult', resultArchetype);
     return resultsData[resultArchetype];
   };
 
-  // --- 1. SUSPENSE LOADING SCREEN (OPTIMIZED) ---
+  // --- 1. SUSPENSE LOADING SCREEN ---
   if (isAnalyzing) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950">
@@ -163,7 +178,7 @@ export default function QuizPage() {
     );
   }
 
-  // --- 2. PAYWALL SCREEN (OPTIMIZED) ---
+  // --- 2. PAYWALL SCREEN ---
   if (showPaywall) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-zinc-950">
@@ -200,11 +215,10 @@ export default function QuizPage() {
               Unlock My Full Report →
             </a>
             
-            {/* UPDATED TEXT TO SHOW MULTIPLE PAYMENT OPTIONS */}
             <p className="text-[10px] text-zinc-500">Secure checkout: M-Pesa, Card, or Bank Transfer.</p>
 
-            {/* SECRET TEST BUTTON - DELETE THIS LINE LATER WHEN YOU GO LIVE */}
-            <Link href="/download" className="block text-[10px] text-zinc-600 mt-3 underline">
+            {/* SECRET TEST BUTTON */}
+            <Link href="/download?test=Avoidant%20Runner" className="block text-[10px] text-zinc-600 mt-3 underline">
               [Dev Test] Skip payment & test download
             </Link>
           </div>
@@ -213,7 +227,7 @@ export default function QuizPage() {
     );
   }
 
-  // --- 3. RESULT SCREEN (OPTIMIZED) ---
+  // --- 3. RESULT SCREEN (Fallback) ---
   if (showResult) {
     const result = getFinalResult();
     return (
@@ -241,7 +255,7 @@ export default function QuizPage() {
     );
   }
 
-  // --- 4. QUIZ QUESTIONS (OPTIMIZED) ---
+  // --- 4. QUIZ QUESTIONS ---
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-zinc-950">
       <div className="max-w-md w-full space-y-6">
