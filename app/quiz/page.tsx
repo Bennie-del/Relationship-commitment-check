@@ -115,6 +115,9 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [loadingText, setLoadingText] = useState("Analyzing attachment patterns...");
   const [progress, setProgress] = useState(0);
+  
+  // NEW: This holds the actual result so the test button can use it
+  const [finalArchetype, setFinalArchetype] = useState("");
 
   const handleAnswer = (archetype: string) => {
     const newScores = { ...scores, [archetype]: scores[archetype] + 1 };
@@ -123,7 +126,7 @@ export default function QuizPage() {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // --- THE FIX: Calculate and save result IMMEDIATELY upon finishing ---
+      // Calculate the result
       let maxScore = 0;
       let resultArchetype = "Avoidant Runner";
       for (const [arch, score] of Object.entries(newScores)) {
@@ -133,8 +136,9 @@ export default function QuizPage() {
         }
       }
       
-      // Save to browser memory RIGHT NOW before showing the paywall
+      // Save to browser memory AND save it for the test button
       localStorage.setItem('userQuizResult', resultArchetype);
+      setFinalArchetype(resultArchetype);
       
       // Start the analyzing animation
       setIsAnalyzing(true);
@@ -207,7 +211,7 @@ export default function QuizPage() {
               <span className="text-2xl font-bold text-white">$0.90</span>
             </div>
             
-            {/* MAIN PAYMENT BUTTON (Opens in same tab for proper redirect) */}
+            {/* MAIN PAYMENT BUTTON */}
             <a 
               href="https://selar.co/71885987x8" 
               className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center hover:opacity-90 transition-opacity"
@@ -217,9 +221,12 @@ export default function QuizPage() {
             
             <p className="text-[10px] text-zinc-500">Secure checkout: M-Pesa, Card, or Bank Transfer.</p>
 
-            {/* SECRET TEST BUTTON */}
-            <Link href="/download?test=Avoidant%20Runner" className="block text-[10px] text-zinc-600 mt-3 underline">
-              [Dev Test] Skip payment & test download
+            {/* FIXED TEST BUTTON: Now uses your actual quiz result! */}
+            <Link 
+              href={`/download?test=${encodeURIComponent(finalArchetype)}`} 
+              className="block text-[10px] text-zinc-600 mt-3 underline"
+            >
+              [Dev Test] Skip payment & test download ({finalArchetype})
             </Link>
           </div>
         </div>
