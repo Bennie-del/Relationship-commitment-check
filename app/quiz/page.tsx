@@ -192,15 +192,16 @@ export default function QuizPage() {
               <span className="text-2xl font-bold text-white">$0.90</span>
             </div>
             
+            {/* THIS IS YOUR NEW SELAR LINK */}
             <a 
-              href="https://www.paypal.com/ncp/payment/78SAVHWBR3FRG" 
+              href="https://selar.co/71885987x8" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center"
+              className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center hover:opacity-90 transition-opacity"
             >
               Unlock My Full Report →
             </a>
-            <p className="text-[10px] text-zinc-500">Secure checkout. Instant delivery.</p>
+            <p className="text-[10px] text-zinc-500">Secure checkout via M-Pesa or Card. Instant delivery.</p>
           </div>
         </div>
       </main>
@@ -254,7 +255,7 @@ export default function QuizPage() {
               <button 
                 key={index} 
                 onClick={() => handleAnswer(option.archetype)} 
-                className="w-full text-left p-3 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-200 text-sm"
+                className="w-full text-left p-3 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-200 text-sm hover:bg-zinc-700 transition-colors"
               >
                 <span className="inline-block w-5 h-5 rounded-full border border-zinc-500 mr-2 text-center text-xs leading-4">{String.fromCharCode(65 + index)}</span>
                 {option.text}
