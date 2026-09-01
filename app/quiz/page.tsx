@@ -192,11 +192,9 @@ export default function QuizPage() {
               <span className="text-2xl font-bold text-white">$0.90</span>
             </div>
             
-            {/* THIS IS YOUR NEW SELAR LINK */}
+            {/* UPDATED: Opens in the SAME tab so the redirect works perfectly */}
             <a 
               href="https://selar.co/71885987x8" 
-              target="_blank" 
-              rel="noopener noreferrer" 
               className="block w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full text-center hover:opacity-90 transition-opacity"
             >
               Unlock My Full Report →
