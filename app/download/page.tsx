@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-// YOUR REAL GOOGLE DRIVE LINKS ARE NOW CONNECTED!
+// YOUR REAL GOOGLE DRIVE LINKS
 const pdfLinks: Record<string, string> = {
   "Avoidant Runner": "https://drive.google.com/file/d/1ckl1QdhOLxY0kvC4UTMm67wSkq1EFO8E/view?usp=sharing",
   "Anxious Over-Analyzer": "https://drive.google.com/file/d/1QkFNkMg-WOFLF37sgCJTd99KszmEkvKS/view?usp=sharing",
@@ -13,12 +13,25 @@ const pdfLinks: Record<string, string> = {
 
 export default function DownloadPage() {
   const [result, setResult] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check the browser's memory for their quiz result
+    // Check localStorage immediately when component mounts
     const savedResult = localStorage.getItem('userQuizResult');
+    console.log('Quiz result from storage:', savedResult); // For debugging
     setResult(savedResult);
+    setIsLoading(false);
   }, []);
+
+  // Show loading state while checking
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-zinc-950 text-white text-center">
+        <div className="w-12 h-12 rounded-full border-4 border-zinc-800 border-t-purple-500 animate-spin mb-4" />
+        <p className="text-zinc-400">Loading your report...</p>
+      </main>
+    );
+  }
 
   if (!result) {
     return (
